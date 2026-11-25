@@ -1,0 +1,11 @@
+# Your own settings and notes: never published.
+config/mailserver.env
+private/
+
+# Secrets and alert settings live only on the server (/etc/mailserver); these
+# names are ignored in case a copy ends up here.
+config/secrets.env
+config/alerts.env
+*.mobileconfig
+
+.DS_Store

@@ -1,0 +1,20 @@
+# Ban IP addresses after repeated failed logins. Managed by the mailserver scripts.
+[DEFAULT]
+backend = systemd
+bantime = 1h
+bantime.increment = true
+findtime = 10m
+maxretry = 5
+
+[sshd]
+enabled = true
+
+[postfix-sasl]
+enabled = true
+port = smtp,465
+
+[dovecot]
+enabled = true
+port = imaps
+# Dovecot 2.4 log format (templates/fail2ban/mailserver-dovecot.conf)
+filter = mailserver-dovecot

@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# Mail server admin command (installed as /usr/local/sbin/mailctl).
+set -euo pipefail
+dir="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
+
+usage() {
+  cat <<'EOF'
+Usage: mailctl <command> [arguments]
+
+Domains
+  add-domain <domain>              Host a new domain (creates its DKIM key, prints DNS records)
+  remove-domain <domain>           Stop hosting a domain (it must have no mailboxes or aliases)
+  dns-records [<domain>|--server]  Show the DNS records to enter, and whether they are live
+
+Mailboxes
+  add-mailbox <address> [--prompt]     Create a mailbox (generates a password unless --prompt)
+  reset-password <address> [--prompt]  Set a new password
+  remove-mailbox <address> [--delete-mail]
+
+Aliases
+  add-alias <alias> <target>[,<target>...]   Create or change an alias
+  remove-alias <alias>
+
+Other
+  list                         Show domains, mailboxes and aliases
+  apple-profile <address>      Create an Apple Mail setup file (.mobileconfig)
+  cert-update [--force]        Add newly resolvable names to the TLS certificate
+  apply                        Regenerate Postfix/Rspamd/web files from /etc/mailserver
+  health [frequent|daily]      Run the health checks now and print the results
+  test-alert                   Send a test message to every alert channel
+  backup                       Run a backup now
+  restore [...]                Restore from backup (see: mailctl restore --help)
+EOF
+}
+
+cmd=${1:-help}
+shift || true
+case $cmd in
+  help|-h|--help) usage ;;
+  apple-profile) exec "$dir/admin/make-apple-profile.sh" "$@" ;;
+  health)        exec "$dir/ops/healthcheck.sh" "${1:-frequent}" --verbose ;;
+  test-alert)    exec "$dir/ops/notify.sh" "Test alert" "If you can read this, alerts from $(hostname -f) reach this channel." ;;
+  backup)        exec "$dir/ops/backup.sh" ;;
+  restore)       exec "$dir/ops/restore.sh" "$@" ;;
+  *)
+    if [[ $cmd =~ ^[a-z-]+$ && -x "$dir/admin/$cmd.sh" ]]; then
+      exec "$dir/admin/$cmd.sh" "$@"
+    fi
+    echo "Unknown command: $cmd" >&2
+    usage >&2
+    exit 1
+    ;;
+esac

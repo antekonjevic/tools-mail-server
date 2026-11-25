@@ -1,0 +1,3 @@
+# Applied only to mail you send through port 465.
+# Removes the Received line that would reveal your device's IP address to every recipient.
+/^Received:.*with ESMTPSA/ IGNORE

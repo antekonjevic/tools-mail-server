@@ -1,0 +1,6 @@
+[Unit]
+Description=Mail server health checks (every 5 minutes)
+
+[Service]
+Type=oneshot
+ExecStart=${REPO_DIR}/scripts/ops/healthcheck.sh frequent

@@ -1,0 +1,5 @@
+# System mail (cron output, Postfix notices) is forwarded to a real mailbox.
+# Managed by the mailserver scripts.
+postmaster: root
+abuse: root
+root: ${ADMIN_EMAIL}

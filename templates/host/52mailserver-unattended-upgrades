@@ -1,0 +1,19 @@
+// Managed by the mailserver scripts. Adds to Ubuntu's 50unattended-upgrades.
+
+// Also update Rspamd from its official repository
+Unattended-Upgrade::Origins-Pattern {
+        "origin=Rspamd,codename=${distro_codename}";
+};
+
+// Reboot when an update requires it, at a quiet time (UTC)
+Unattended-Upgrade::Automatic-Reboot "true";
+Unattended-Upgrade::Automatic-Reboot-Time "${REBOOT_TIME}";
+Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+Unattended-Upgrade::Remove-Unused-Dependencies "true";
+
+// Keep our config files when a package ships a new default version,
+// instead of skipping the update while waiting for an answer.
+Dpkg::Options {
+        "--force-confdef";
+        "--force-confold";
+};

@@ -1,0 +1,10 @@
+[Unit]
+Description=Nightly mail server backup
+
+[Timer]
+OnCalendar=*-*-* ${BACKUP_TIME}:00 UTC
+RandomizedDelaySec=5m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

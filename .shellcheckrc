@@ -1,0 +1,5 @@
+# Settings for shellcheck, used by CI and when you run it from the repository root (the command
+# is in CONTRIBUTING.md). Follow "source" lines relative to the script that has them, so the shared
+# helpers in scripts/lib are checked too.
+source-path=SCRIPTDIR
+external-sources=true
